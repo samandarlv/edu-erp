@@ -5,6 +5,8 @@ import { AuthModule } from "./auth/auth.module";
 import { AdminModule } from "./admin/admin.module";
 import { StudentsModule } from "./students/students.module";
 import { RoleModule } from './role/role.module';
+import { CourseModule } from './course/course.module';
+import { RoomModule } from './room/room.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: ".env", isGlobal: true }),
@@ -14,6 +16,8 @@ import { RoleModule } from './role/role.module';
     AdminModule,
     StudentsModule,
     RoleModule,
+    CourseModule,
+    RoomModule,
   ],
   controllers: [],
   providers: [],

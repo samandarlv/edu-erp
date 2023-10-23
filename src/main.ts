@@ -2,6 +2,7 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import * as cookieParser from "cookie-parser";
+import { ValidationPipe } from "@nestjs/common";
 
 async function start() {
   const app = await NestFactory.create(AppModule, { cors: true });
@@ -11,13 +12,15 @@ async function start() {
     .setDescription("Education center's API")
     .setVersion("1.0")
     .addTag("NestJs, Mongodb, JWT, OTP, Redis")
+    .addBearerAuth()
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
   app.setGlobalPrefix("/api");
+  const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("/docs", app, document);
 
   app.use(cookieParser());
+  app.useGlobalPipes(new ValidationPipe());
 
   const port = process.env.PORT;
   await app.listen(port, () => {

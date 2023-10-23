@@ -25,6 +25,13 @@ export class AuthService {
 
   async login(loginDto: LoginDto, res: Response) {
     const user = await this.authModel.findOne({ phone: loginDto.phone });
+
+    console.log(user);
+
+    if (!user) {
+      throw new BadRequestException("Phone number or password is incorrect");
+    }
+
     if (user.role === "Admin") {
       const admin = await this.adminModel.findOne({ phone: loginDto.phone });
       if (!admin) {
@@ -39,10 +46,7 @@ export class AuthService {
         await this.authModel.deleteOne({ _id: loginDto.phone });
       }
     }
-    
-    if (!user) {
-      throw new BadRequestException("Phone number or password is incorrect");
-    }
+
     const is_equal = await bcrypt.compare(loginDto.password, user.password);
 
     if (!is_equal) {

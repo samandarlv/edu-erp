@@ -3,7 +3,7 @@ import { IsNotEmpty, IsString, Matches } from "class-validator";
 
 export class LoginDto {
   @ApiProperty({
-    example: "+998-90-123-45-67",
+    example: "+998931234567",
     description: "User's phone number",
   })
   @IsString()
@@ -13,6 +13,10 @@ export class LoginDto {
   })
   phone: string;
 
+  @ApiProperty({
+    example: "password",
+    description: "User's password",
+  })
   @IsString()
   @IsNotEmpty()
   password: string;
