@@ -16,12 +16,12 @@ export class AuthController {
     return this.authService.login(loginDto, res);
   }
 
-  // @ApiOperation({ summary: "Logout qilish" })
-  // @Post("logout")
-  // logout(
-  //   @CookieGetter("refresh_token") refreshToken: string,
-  //   @Res({ passthrough: true }) res: Response,
-  // ) {
-  //   return this.authService.logout(refreshToken, res);
-  // }
+  @ApiOperation({ summary: "Logout qilish" })
+  @Post("logout")
+  logout(
+    @CookieGetter("refresh_token") refreshToken: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.authService.logout(refreshToken, res);
+  }
 }

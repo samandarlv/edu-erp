@@ -1,9 +1,13 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { CreateCourseDto } from "./dto/create-course.dto";
 import { UpdateCourseDto } from "./dto/update-course.dto";
 import { InjectModel } from "@nestjs/mongoose";
 import { Course } from "./schemas/course.schema";
-import { Model } from "mongoose";
+import { Model, isValidObjectId } from "mongoose";
 
 @Injectable()
 export class CourseService {
@@ -37,15 +41,46 @@ export class CourseService {
     return { count: course.length, courses };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} course`;
+  async findOne(id: string) {
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException("Id is not valid");
+    }
+
+    const course = await this.courseModel.findById(id);
+    if (!course) {
+      throw new NotFoundException("Course not found with such id");
+    }
+    return course;
   }
 
-  update(id: number, updateCourseDto: UpdateCourseDto) {
-    return `This action updates a #${id} course`;
+  async update(id: string, updateCourseDto: UpdateCourseDto) {
+    const course = await this.findOne(id);
+    if (!course) {
+      throw new NotFoundException("Course not found with such id");
+    }
+
+    const updated = await this.courseModel.findByIdAndUpdate(
+      id,
+      updateCourseDto,
+      { new: true },
+    );
+    if (!updated) {
+      throw new BadRequestException("Error while updating");
+    }
+
+    return { message: "Updated successfully", course: updated };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} course`;
+  async remove(id: string) {
+    const course = await this.findOne(id);
+    if (!course) {
+      throw new NotFoundException("Course not found with such id");
+    }
+
+    const deleted = await this.courseModel.findByIdAndDelete(id);
+    if (!deleted) {
+      throw new BadRequestException("Error while deleting");
+    }
+    return { message: "Deleted succesfully" };
   }
 }
