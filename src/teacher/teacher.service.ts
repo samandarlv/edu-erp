@@ -8,11 +8,16 @@ import { UpdateTeacherDto } from "./dto/update-teacher.dto";
 import { InjectModel } from "@nestjs/mongoose";
 import { Teacher } from "./schemas/teacher.schema";
 import { Model, isValidObjectId } from "mongoose";
+import { Auth } from "src/auth/schemas/auth.schema";
+import * as bcrypt from "bcrypt";
+import { Role } from "src/role/schemas/role.schema";
 
 @Injectable()
 export class TeacherService {
   constructor(
     @InjectModel(Teacher.name) private teacherModel: Model<Teacher>,
+    @InjectModel(Auth.name) private authModel: Model<Auth>,
+    @InjectModel(Role.name) private roleModel: Model<Role>,
   ) {}
 
   async create(createTeacherDto: CreateTeacherDto) {
@@ -20,14 +25,35 @@ export class TeacherService {
       const teacher = await this.teacherModel.findOne({
         phone: createTeacherDto.phone,
       });
+
       if (teacher) {
         throw new BadRequestException(
           "Teacher with such phone number already exists",
         );
       }
 
+      const role = await this.roleModel.findOne({ role: "Teacher" });
+      if (!role) {
+        throw new NotFoundException("Role not found");
+      }
+
+      const password = await bcrypt.hash(createTeacherDto.phone, 8);
+
       const new_teacher = await (
-        await this.teacherModel.create(createTeacherDto)
+        await this.teacherModel.create({
+          ...createTeacherDto,
+          password,
+          role_id: role._id,
+        })
+      ).save();
+
+      await (
+        await this.authModel.create({
+          user_id: new_teacher._id,
+          phone: new_teacher.phone,
+          password: new_teacher.password,
+          role: role.role,
+        })
       ).save();
 
       return { message: "Created successfully", teacher: new_teacher };
@@ -36,10 +62,16 @@ export class TeacherService {
     }
   }
 
-  async findAll() {
-    const teachers = await this.teacherModel.find().populate("course_id");
+  async findAll(page: number, limit: number) {
+    const skip = (page - 1) * limit;
+    const count = await this.teacherModel.find();
+    const teachers = await this.teacherModel
+      .find()
+      .skip(skip)
+      .limit(limit)
+      .populate("course_id");
 
-    return teachers;
+    return { count, teachers };
   }
 
   async findOne(id: string) {
@@ -62,32 +94,35 @@ export class TeacherService {
       throw new BadRequestException("Id is not valid");
     }
 
-    const teacher = await this.teacherModel.findByIdAndUpdate(
-      id,
-      updateTeacherDto,
-      {
-        new: true,
-      },
-    );
-
+    const teacher = await this.teacherModel.findById(id);
     if (!teacher) {
-      throw new BadRequestException();
+      throw new NotFoundException("Teacher not found with such id");
     }
 
-    return { message: "Updated successfully", teacher };
+    const updated = await this.teacherModel.findByIdAndUpdate(
+      id,
+      updateTeacherDto,
+      { new: true },
+    );
+
+    if (!updated) {
+      throw new BadRequestException("Error while updating");
+    }
+
+    return { message: "Updated successfully", teacher: updated };
   }
 
   async remove(id: string) {
     if (!isValidObjectId(id)) {
       throw new BadRequestException("Is is not valid");
     }
-    const teacher = await this.teacherModel.findById(id);
 
+    const teacher = await this.teacherModel.findById(id);
     if (!teacher) {
       throw new NotFoundException("Teacher not found with such id");
     }
-    const deleted = await this.teacherModel.findByIdAndDelete(id);
 
+    const deleted = await this.teacherModel.findByIdAndDelete(id);
     if (deleted) {
       return { message: "Deleted successfully" };
     }
