@@ -7,6 +7,7 @@ import { StudentsModule } from "./students/students.module";
 import { RoleModule } from './role/role.module';
 import { CourseModule } from './course/course.module';
 import { RoomModule } from './room/room.module';
+import { TeacherModule } from './teacher/teacher.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: ".env", isGlobal: true }),
@@ -18,6 +19,7 @@ import { RoomModule } from './room/room.module';
     RoleModule,
     CourseModule,
     RoomModule,
+    TeacherModule,
   ],
   controllers: [],
   providers: [],
