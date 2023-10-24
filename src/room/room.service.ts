@@ -1,9 +1,13 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { CreateRoomDto } from "./dto/create-room.dto";
 import { UpdateRoomDto } from "./dto/update-room.dto";
 import { InjectModel } from "@nestjs/mongoose";
 import { Room } from "./schemas/room.schema";
-import { Model } from "mongoose";
+import { Model, isValidObjectId } from "mongoose";
 
 @Injectable()
 export class RoomService {
@@ -25,19 +29,49 @@ export class RoomService {
     }
   }
 
-  findAll() {
-    return `This action returns all room`;
+  async findAll() {
+    const rooms = await this.roomModel.find();
+    return rooms;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} room`;
+  async findOne(id: string) {
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException("Id is not valid");
+    }
+
+    const room = await this.roomModel.findById(id);
+    if (!room) {
+      throw new NotFoundException("Room not found with such id");
+    }
+
+    return room;
   }
 
-  update(id: number, updateRoomDto: UpdateRoomDto) {
-    return `This action updates a #${id} room`;
+  async update(id: string, updateRoomDto: UpdateRoomDto) {
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException("Id is not valid");
+    }
+
+    const room = await this.roomModel.findById(id);
+    if (!room) {
+      throw new NotFoundException("Room not found with such id");
+    }
+    await room.updateOne(updateRoomDto);
+
+    return { message: "Updated successfully", room };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} room`;
+  async remove(id: string) {
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException("Id is not valid");
+    }
+
+    const room = await this.roomModel.findById(id);
+    if (!room) {
+      throw new NotFoundException("Room not found with such id");
+    }
+    await room.deleteOne();
+
+    return { message: "Deleted successfull" };
   }
 }
