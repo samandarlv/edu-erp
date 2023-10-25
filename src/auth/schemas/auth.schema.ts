@@ -7,7 +7,7 @@ export type AuthDocument = HydratedDocument<Auth>;
 @Schema({ versionKey: false })
 export class Auth extends Document {
   @Prop({ type: String, required: true })
-  user_id: string;
+  user: string;
 
   @Prop({ type: String, required: true })
   phone: string;

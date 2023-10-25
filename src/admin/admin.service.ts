@@ -31,12 +31,12 @@ export class AdminService {
       const admin = await this.adminModel.create({
         ...createAdminDto,
         password,
-        role_id: role._id,
+        role: role._id,
       });
 
       (
         await this.authModel.create({
-          user_id: admin._id,
+          user: admin._id,
           phone: admin.phone,
           password: admin.password,
           role: role.role,

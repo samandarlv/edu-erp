@@ -12,9 +12,6 @@ export class Course extends Document {
   total_lessons: number;
 
   @Prop({ type: Number, required: true })
-  duration: number;
-
-  @Prop({ type: Number, required: true })
   price: number;
 }
 

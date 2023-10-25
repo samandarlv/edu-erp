@@ -26,8 +26,8 @@ export class StudentsController {
 
   @ApiOperation({ summary: "Get all students" })
   @Get("get-all")
-  findAll(@Query("page") page: number, @Query("limit") limit: number) {
-    return this.studentsService.findAll(page, limit);
+  findAll(@Query("page") page: string, @Query("limit") limit: string) {
+    return this.studentsService.findAll(+page, +limit);
   }
 
   @ApiOperation({ summary: "Get student by id" })

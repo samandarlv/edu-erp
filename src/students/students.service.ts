@@ -37,18 +37,20 @@ export class StudentsService {
       await this.studentModel.create({
         ...createStudentDto,
         password,
-        role_id: role._id,
+        role: role._id,
       })
     ).save();
 
     await (
       await this.authModel.create({
-        user_id: new_student._id,
+        user: new_student._id,
         phone: new_student.phone,
         password: new_student.password,
         role: role.role,
       })
     ).save();
+
+    return new_student;
   }
 
   async findAll(page: number, limit: number) {

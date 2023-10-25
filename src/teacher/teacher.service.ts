@@ -43,13 +43,13 @@ export class TeacherService {
         await this.teacherModel.create({
           ...createTeacherDto,
           password,
-          role_id: role._id,
+          role: role._id,
         })
       ).save();
 
       await (
         await this.authModel.create({
-          user_id: new_teacher._id,
+          user: new_teacher._id,
           phone: new_teacher.phone,
           password: new_teacher.password,
           role: role.role,
@@ -69,7 +69,7 @@ export class TeacherService {
       .find()
       .skip(skip)
       .limit(limit)
-      .populate("course_id");
+      .populate("course");
 
     return { count, teachers };
   }
@@ -81,7 +81,7 @@ export class TeacherService {
 
     const teacher = await this.teacherModel
       .findOne({ _id: id })
-      .populate("course_id");
+      .populate("course");
 
     if (!teacher) {
       throw new NotFoundException("Teacher not found with such id");

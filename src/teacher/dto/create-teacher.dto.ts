@@ -29,5 +29,5 @@ export class CreateTeacherDto {
   })
   @IsString()
   @IsNotEmpty()
-  course_id: string;
+  course: string;
 }

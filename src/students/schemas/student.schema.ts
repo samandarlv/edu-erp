@@ -1,11 +1,11 @@
-import mongoose, { HydratedDocument } from "mongoose";
+import mongoose, { Document, HydratedDocument } from "mongoose";
 import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
 import { Role } from "src/role/schemas/role.schema";
 
 export type StudentDocument = HydratedDocument<Student>;
 
 @Schema({ versionKey: false })
-export class Student {
+export class Student extends Document {
   @Prop({ type: String, required: true })
   first_name: string;
 
@@ -19,7 +19,7 @@ export class Student {
   password: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "Role", required: true })
-  role_id: Role;
+  role: Role;
 }
 
 export const StudentSchema = SchemaFactory.createForClass(Student);

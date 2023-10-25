@@ -18,7 +18,7 @@ export class CreateStudentDto {
   })
   @IsNotEmpty()
   @IsString()
-  @Matches(/^\+998-\d{2}-\d{3}-\d{4}$/, {
+  @Matches(/^\+998\d{2}\d{3}\d{4}$/, {
     message: "Phone number should be in the format +998-XX-XXX-XXXX",
   })
   phone: string;

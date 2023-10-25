@@ -10,14 +10,8 @@ export class CreateCourseDto {
   @ApiProperty({ example: 12, description: "Total number of lessons" })
   @IsNumber()
   @Max(35)
-  @Min(20)
+  @Min(10)
   total_lessons: string;
-
-  @ApiProperty({ example: 3, description: "Duration of course, in months" })
-  @IsNumber()
-  @Max(8)
-  @Min(3)
-  duration: string;
 
   @ApiProperty({ example: 110, description: "Price of course" })
   @IsNumber()

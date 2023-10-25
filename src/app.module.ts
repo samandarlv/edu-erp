@@ -8,6 +8,10 @@ import { RoleModule } from './role/role.module';
 import { CourseModule } from './course/course.module';
 import { RoomModule } from './room/room.module';
 import { TeacherModule } from './teacher/teacher.module';
+import { GroupModule } from './group/group.module';
+import { LessonModule } from './lesson/lesson.module';
+import { StudentGroupModule } from './student_group/student_group.module';
+import { LessonAttendanceModule } from './lesson_attendance/lesson_attendance.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: ".env", isGlobal: true }),
@@ -20,6 +24,10 @@ import { TeacherModule } from './teacher/teacher.module';
     CourseModule,
     RoomModule,
     TeacherModule,
+    GroupModule,
+    LessonModule,
+    StudentGroupModule,
+    LessonAttendanceModule,
   ],
   controllers: [],
   providers: [],
