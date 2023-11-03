@@ -23,25 +23,25 @@ export class RoomController {
     return this.roomService.create(createRoomDto);
   }
 
-  @ApiOperation({ summary: "Get all romms" })
+  @ApiOperation({ summary: "Get all rooms" })
   @Get("get-all")
   findAll() {
     return this.roomService.findAll();
   }
 
-  @ApiOperation({ summary: "Get romm by id" })
+  @ApiOperation({ summary: "Get room by id" })
   @Get("get/:id")
   findOne(@Param("id") id: string) {
     return this.roomService.findOne(id);
   }
 
-  @ApiOperation({ summary: "Update romm by id" })
+  @ApiOperation({ summary: "Update room by id" })
   @Patch("update/:id")
   update(@Param("id") id: string, @Body() updateRoomDto: UpdateRoomDto) {
     return this.roomService.update(id, updateRoomDto);
   }
 
-  @ApiOperation({ summary: "Delete romm by id" })
+  @ApiOperation({ summary: "Delete room by id" })
   @Delete("delete/:id")
   remove(@Param("id") id: string) {
     return this.roomService.remove(id);

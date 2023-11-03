@@ -10,7 +10,9 @@ import {
 import { GroupService } from "./group.service";
 import { CreateGroupDto } from "./dto/create-group.dto";
 import { UpdateGroupDto } from "./dto/update-group.dto";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
+@ApiTags("Group")
 @Controller("group")
 export class GroupController {
   constructor(private readonly groupService: GroupService) {}
@@ -24,19 +26,21 @@ export class GroupController {
   findAll() {
     return this.groupService.findAll();
   }
-
-  @Get(":id")
+  @ApiOperation({ summary: "Get one group by id" })
+  @Get("get/:id")
   findOne(@Param("id") id: string) {
-    return this.groupService.findOne(+id);
+    return this.groupService.findOne(id);
   }
 
-  @Patch(":id")
+  @ApiOperation({ summary: "Update group by id" })
+  @Patch("update/:id")
   update(@Param("id") id: string, @Body() updateGroupDto: UpdateGroupDto) {
-    return this.groupService.update(+id, updateGroupDto);
+    return this.groupService.update(id, updateGroupDto);
   }
 
-  @Delete(":id")
+  @ApiOperation({ summary: "Delete group by id" })
+  @Delete("delete/:id")
   remove(@Param("id") id: string) {
-    return this.groupService.remove(+id);
+    return this.groupService.remove(id);
   }
 }

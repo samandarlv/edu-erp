@@ -12,6 +12,7 @@ import { GroupModule } from './group/group.module';
 import { LessonModule } from './lesson/lesson.module';
 import { StudentGroupModule } from './student_group/student_group.module';
 import { LessonAttendanceModule } from './lesson_attendance/lesson_attendance.module';
+import { TeacherGroupModule } from './teacher_group/teacher_group.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: ".env", isGlobal: true }),
@@ -28,6 +29,7 @@ import { LessonAttendanceModule } from './lesson_attendance/lesson_attendance.mo
     LessonModule,
     StudentGroupModule,
     LessonAttendanceModule,
+    TeacherGroupModule,
   ],
   controllers: [],
   providers: [],

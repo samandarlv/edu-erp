@@ -7,7 +7,7 @@ import { CreateGroupDto } from "./dto/create-group.dto";
 import { UpdateGroupDto } from "./dto/update-group.dto";
 import { InjectModel } from "@nestjs/mongoose";
 import { Group } from "./schemas/group.schema";
-import { Model } from "mongoose";
+import { Model, isValidObjectId } from "mongoose";
 import { Lesson } from "src/lesson/schemas/lesson.schema";
 import { Course } from "src/course/schemas/course.schema";
 import getDates from "src/utils/generate-dates";
@@ -49,13 +49,12 @@ export class GroupService {
       dates.forEach(async (date) => {
         await this.lessonModel.create({
           group: new_group._id,
-          teacher: new_group.teacher,
           date,
           is_done: true,
         });
       });
 
-      return new_group;
+      return { message: "Created successfully", group: new_group };
     } catch (error) {
       throw new BadRequestException(error.message);
     }
@@ -66,15 +65,28 @@ export class GroupService {
     return groups;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} group`;
+  async findOne(id: string) {
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException("Id is not valid");
+    }
+
+    const group = await this.groupModel.findById(id);
+    if (!group) {
+      throw new NotFoundException("Group not found with such id");
+    }
+
+    return group;
   }
 
-  update(id: number, updateGroupDto: UpdateGroupDto) {
-    return `This action updates a #${id} group`;
+  async update(id: string, updateGroupDto: UpdateGroupDto) {
+    const group = await this.findOne(id);
+    await group.updateOne(updateGroupDto);
+    return { message: "Updated successfully", group };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} group`;
+  async remove(id: string) {
+    const group = await this.findOne(id);
+    await group.deleteOne();
+    return { message: "Deleted succesfully" };
   }
 }

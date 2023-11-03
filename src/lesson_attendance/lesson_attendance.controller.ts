@@ -19,16 +19,16 @@ export class LessonAttendanceController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.lessonAttendanceService.findOne(+id);
+    return this.lessonAttendanceService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateLessonAttendanceDto: UpdateLessonAttendanceDto) {
-    return this.lessonAttendanceService.update(+id, updateLessonAttendanceDto);
+    return this.lessonAttendanceService.update(id, updateLessonAttendanceDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.lessonAttendanceService.remove(+id);
+    return this.lessonAttendanceService.remove(id);
   }
 }

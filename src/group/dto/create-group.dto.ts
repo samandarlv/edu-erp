@@ -14,11 +14,6 @@ export class CreateGroupDto {
   @IsNotEmpty()
   name: string;
 
-  @ApiProperty({ example: "id", description: "Id of teacher" })
-  @IsString()
-  @IsNotEmpty()
-  teacher: string;
-
   @ApiProperty({ example: "id", description: "Id of course" })
   @IsString()
   @IsNotEmpty()

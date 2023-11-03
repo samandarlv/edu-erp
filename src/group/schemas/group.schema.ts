@@ -13,13 +13,6 @@ export class Group extends Document {
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Teacher",
-    required: true,
-  })
-  teacher: Teacher;
-
-  @Prop({
-    type: mongoose.Schema.Types.ObjectId,
     ref: "Course",
     required: true,
   })
